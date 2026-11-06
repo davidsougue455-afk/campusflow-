@@ -34,3 +34,32 @@ class TachesNotifier extends Notifier<List<Task>> {
 
 final tachesProvider =
 NotifierProvider<TachesNotifier, List<Task>>(TachesNotifier.new);
+enum Filtre { toutes, aFaire, faites, enRetard }
+
+class FiltreNotifier extends Notifier<Filtre> {
+  @override
+  Filtre build() => Filtre.toutes;
+
+  void choisir(Filtre f) => state = f;
+}
+
+final filtreProvider =
+NotifierProvider<FiltreNotifier, Filtre>(FiltreNotifier.new);
+
+final tachesFiltreesProvider = Provider<List<Task>>((ref) {
+  final taches = ref.watch(tachesProvider);
+  final filtre = ref.watch(filtreProvider);
+  final maintenant = DateTime.now();
+  switch (filtre) {
+    case Filtre.toutes:
+      return taches;
+    case Filtre.aFaire:
+      return taches.where((t) => !t.done).toList();
+    case Filtre.faites:
+      return taches.where((t) => t.done).toList();
+    case Filtre.enRetard:
+      return taches
+          .where((t) => !t.done && t.dueDate.isBefore(maintenant))
+          .toList();
+  }
+});
