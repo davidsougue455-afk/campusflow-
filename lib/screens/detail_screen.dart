@@ -23,11 +23,21 @@ class DetailContent extends StatelessWidget {
               children: [
                 Text(task.title, style: Theme.of(context).textTheme.headlineSmall),
                 const SizedBox(height: 8),
-                Text(task.course),
+                Text('Cours : ${task.course}'),
                 const SizedBox(height: 8),
-                Text('Échéance : ${DateFormat('dd/MM/yyyy').format(task.dueDate)}'),
+                Text('Échéance : ${DateFormat('dd/MM/yyyy à HH:mm').format(task.dueDate)}'),
                 const SizedBox(height: 8),
                 Text(task.done ? 'Statut : fait' : 'Statut : à faire'),
+                if (task.reminder) ...[
+                  const SizedBox(height: 8),
+                  const Text('Rappel activé'),
+                ],
+                const SizedBox(height: 16),
+                Text(
+                  task.description.isEmpty
+                      ? 'Aucune description'
+                      : task.description,
+                ),
               ],
             ),
           ),
@@ -62,7 +72,7 @@ class DetailScreen extends ConsumerWidget {
     }
     final task = matches.first;
     return Scaffold(
-      appBar: AppBar(title: const Text('Détail')),
+      appBar: AppBar(title: Text(task.title)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: DetailContent(

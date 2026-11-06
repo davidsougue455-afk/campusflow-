@@ -4,6 +4,7 @@ import 'screens/app_shell.dart';
 import 'screens/deadlines_screen.dart';
 import 'screens/detail_screen.dart';
 import 'screens/form_screen.dart';
+import 'screens/login_screen.dart';
 import 'screens/title_screen.dart';
 
 Widget _placeholder(String titre) => Scaffold(
@@ -15,6 +16,7 @@ final appRouter = GoRouter(
   initialLocation: '/',
   routes: [
     GoRoute(path: '/', builder: (context, state) => const TitleScreen()),
+    GoRoute(path: '/connexion', builder: (context, state) => const LoginScreen()),
     ShellRoute(
       builder: (context, state, child) => AppShell(child: child),
       routes: [

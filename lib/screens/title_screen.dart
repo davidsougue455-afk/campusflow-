@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'deadlines_screen.dart';
+import 'package:go_router/go_router.dart';
 
 class TitleScreen extends StatelessWidget {
   const TitleScreen({super.key});
@@ -23,10 +23,7 @@ class TitleScreen extends StatelessWidget {
               const Text('Gère tes échéances de cours'),
               const SizedBox(height: 32),
               FilledButton(
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const DeadlinesScreen()),
-                ),
+                onPressed: () => context.go('/connexion'),
                 child: const Text('Commencer'),
               ),
             ],

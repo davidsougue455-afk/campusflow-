@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import '../providers/tasks_provider.dart';
 
 class FormScreen extends ConsumerStatefulWidget {
@@ -15,30 +16,37 @@ class _FormScreenState extends ConsumerState<FormScreen> {
   final _titleController = TextEditingController();
   final _courseController = TextEditingController();
   final _dateController = TextEditingController();
+  final _descriptionController = TextEditingController();
   DateTime? _dueDate;
+  bool _reminder = false;
 
   @override
   void dispose() {
     _titleController.dispose();
     _courseController.dispose();
     _dateController.dispose();
+    _descriptionController.dispose();
     super.dispose();
   }
 
   Future<void> _pickDate() async {
-    final picked = await showDatePicker(
+    final date = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2020),
       lastDate: DateTime(2035),
     );
-    if (picked != null) {
-      setState(() {
-        _dueDate = picked;
-        _dateController.text =
-        '${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year}';
-      });
-    }
+    if (date == null || !mounted) return;
+    final time = await showTimePicker(
+      context: context,
+      initialTime: const TimeOfDay(hour: 17, minute: 0),
+    );
+    if (time == null || !mounted) return;
+    final picked = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+    setState(() {
+      _dueDate = picked;
+      _dateController.text = DateFormat('dd/MM/yyyy HH:mm').format(picked);
+    });
   }
 
   void _submit() {
@@ -47,6 +55,8 @@ class _FormScreenState extends ConsumerState<FormScreen> {
         title: _titleController.text.trim(),
         course: _courseController.text.trim(),
         dueDate: _dueDate!,
+        description: _descriptionController.text.trim(),
+        reminder: _reminder,
       );
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Tâche ajoutée')),
@@ -92,14 +102,30 @@ class _FormScreenState extends ConsumerState<FormScreen> {
                 readOnly: true,
                 onTap: _pickDate,
                 decoration: const InputDecoration(
-                  labelText: 'Échéance',
+                  labelText: 'Date',
                   suffixIcon: Icon(Icons.calendar_today),
                 ),
                 validator: (value) => (value == null || value.isEmpty)
-                    ? 'Choisis une date'
+                    ? 'Choisis une date et une heure'
                     : null,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _descriptionController,
+                maxLines: 3,
+                decoration: const InputDecoration(
+                  labelText: 'Description (facultatif)',
+                  alignLabelWithHint: true,
+                ),
+              ),
+              const SizedBox(height: 8),
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Rappel'),
+                value: _reminder,
+                onChanged: (v) => setState(() => _reminder = v),
+              ),
+              const SizedBox(height: 16),
               SizedBox(
                 width: double.infinity,
                 child: FilledButton(

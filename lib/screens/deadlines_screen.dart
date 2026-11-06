@@ -15,8 +15,7 @@ class DeadlinesScreen extends ConsumerStatefulWidget {
 class _DeadlinesScreenState extends ConsumerState<DeadlinesScreen> {
   String? _selectedId;
 
-  String _formatDate(DateTime d) => DateFormat('dd/MM/yyyy').format(d);
-
+  String _formatDate(DateTime d) => DateFormat('dd/MM/yyyy HH:mm').format(d);
   Widget _buildFiltres() {
     final actuel = ref.watch(filtreProvider);
     const labels = {
