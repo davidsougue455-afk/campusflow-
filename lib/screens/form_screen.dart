@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import '../models/task.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../providers/tasks_provider.dart';
 
-class FormScreen extends StatefulWidget {
+class FormScreen extends ConsumerStatefulWidget {
   const FormScreen({super.key});
 
   @override
-  State<FormScreen> createState() => _FormScreenState();
+  ConsumerState<FormScreen> createState() => _FormScreenState();
 }
 
-class _FormScreenState extends State<FormScreen> {
+class _FormScreenState extends ConsumerState<FormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _courseController = TextEditingController();
@@ -41,8 +43,7 @@ class _FormScreenState extends State<FormScreen> {
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
-      final task = Task(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
+      ref.read(tachesProvider.notifier).ajouter(
         title: _titleController.text.trim(),
         course: _courseController.text.trim(),
         dueDate: _dueDate!,
@@ -50,7 +51,7 @@ class _FormScreenState extends State<FormScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Tâche ajoutée')),
       );
-      Navigator.pop(context, task);
+      context.pop();
     }
   }
 
