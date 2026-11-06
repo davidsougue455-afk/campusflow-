@@ -13,9 +13,7 @@ class TitleScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Remplace cette icône par ton image quand l'asset est déclaré :
-              // Image.asset('assets/images/logo.png', height: 120),
-              const Icon(Icons.school, size: 96),
+              Image.asset('assets/images/logo.png', height: 120),
               const SizedBox(height: 24),
               Text(
                 'CampusFlow',
