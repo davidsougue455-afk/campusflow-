@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'theme/app_theme.dart';
 import 'screens/title_screen.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 void main() {
-  runApp(const MyApp());
-}
+  runApp(const ProviderScope(child: MyApp()));}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
